@@ -7,7 +7,8 @@
   <style>
     body {
       margin: 0;
-      background: #0f0f0f;
+      background: url('bg.png') no-repeat center center fixed;
+      background-size: cover;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       flex-direction: column;
@@ -40,7 +41,7 @@
     }
 
     .card {
-      background: #1c1c1c;
+      background: #1c1c1cdd;
       border-radius: 20px;
       box-shadow: 0 0 25px rgba(0,255,120,0.2);
       padding: 30px;
@@ -88,14 +89,17 @@
 
     footer {
       position: fixed;
-      bottom: 15px;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
       color: #888;
       font-size: 0.9em;
+      background: rgba(0, 0, 0, 0.4);
     }
   </style>
 </head>
 <body>
-  <!-- Bitkub Exchange Logo -->
   <img src="bitkub-logo.png" alt="Bitkub Exchange Logo" class="bitkub-logo">
 
   <header>Real-Time Crypto Prices</header>
@@ -114,19 +118,19 @@
       <div class="change" id="eth-change">-</div>
     </div>
     <div class="card">
-      <img src="zrc-logo.png" alt="ZRC Logo" class="logo">
+      <img src="zrc-logo.png" alt="ZRC Logo (Zircuit)" class="logo">
       <div class="coin-name">Zircuit (ZRC)</div>
       <div class="price" id="zrc-price">Loading...</div>
       <div class="change" id="zrc-change">-</div>
     </div>
   </div>
 
-<footer>
-  <div style="margin-bottom: 8px;">
-    Cryptocurrency and digital tokens involve high risks; investors may lose all investment money and should study information carefully and make investments according to their own risk profile.
-  </div>
-  Powered by Bitkub API · Updates every 10 sec
-</footer>
+  <footer>
+    <div style="margin-bottom: 8px;">
+      Cryptocurrency and digital tokens involve high risks; investors may lose all investment money and should study information carefully and make investments according to their own risk profile.
+    </div>
+    Powered by Bitkub API · Updates every 10 sec
+  </footer>
 
   <script>
     async function updatePrices() {
