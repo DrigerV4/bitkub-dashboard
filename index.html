@@ -92,31 +92,31 @@
   <header>Bitkub Real-Time Crypto Prices</header>
   <div class="dashboard">
     <div class="card">
-      <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=026" alt="BTC Logo" class="logo">
+      <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=024" alt="BTC Logo" class="logo">
       <div class="coin-name">Bitcoin (BTC)</div>
       <div class="price" id="btc-price">Loading...</div>
       <div class="change" id="btc-change">-</div>
     </div>
     <div class="card">
-      <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png?v=026" alt="ETH Logo" class="logo">
+      <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png?v=024" alt="ETH Logo" class="logo">
       <div class="coin-name">Ethereum (ETH)</div>
       <div class="price" id="eth-price">Loading...</div>
       <div class="change" id="eth-change">-</div>
     </div>
     <div class="card">
-      <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=026" alt="USDT Logo" class="logo">
+      <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=024" alt="USDT Logo" class="logo">
       <div class="coin-name">Tether (USDT)</div>
       <div class="price" id="usdt-price">Loading...</div>
       <div class="change" id="usdt-change">-</div>
     </div>
   </div>
 
-  <footer>Powered by Bitkub API — Updates every 10 sec</footer>
+  <footer>Powered by Bitkub API · Updates every 10 sec</footer>
 
   <script>
     async function updatePrices() {
       try {
-        const res = await fetch('https://api.bitkub.com/api/market/ticker');
+        const res = await fetch('https://corsproxy.io/?https://api.bitkub.com/api/market/ticker');
         const data = await res.json();
 
         const coins = {
