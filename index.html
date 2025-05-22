@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bitkub Live Prices</title>
+  <title>Crypto THB Prices</title>
   <style>
     body {
       margin: 0;
@@ -89,54 +89,54 @@
   </style>
 </head>
 <body>
-  <header>Bitkub Real-Time Crypto Prices</header>
+  <header>Live Crypto Prices (THB)</header>
   <div class="dashboard">
     <div class="card">
-      <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=024" alt="BTC Logo" class="logo">
+      <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="BTC Logo" class="logo">
       <div class="coin-name">Bitcoin (BTC)</div>
       <div class="price" id="btc-price">Loading...</div>
       <div class="change" id="btc-change">-</div>
     </div>
     <div class="card">
-      <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png?v=024" alt="ETH Logo" class="logo">
+      <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="ETH Logo" class="logo">
       <div class="coin-name">Ethereum (ETH)</div>
       <div class="price" id="eth-price">Loading...</div>
       <div class="change" id="eth-change">-</div>
     </div>
     <div class="card">
-      <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=024" alt="USDT Logo" class="logo">
+      <img src="https://assets.coingecko.com/coins/images/325/large/Tether-logo.png" alt="USDT Logo" class="logo">
       <div class="coin-name">Tether (USDT)</div>
       <div class="price" id="usdt-price">Loading...</div>
       <div class="change" id="usdt-change">-</div>
     </div>
   </div>
 
-  <footer>Powered by Bitkub API · Updates every 10 sec</footer>
+  <footer>Powered by CoinGecko API · Updates every 10 sec</footer>
 
   <script>
     async function updatePrices() {
       try {
-        const res = await fetch('https://corsproxy.io/?https://api.bitkub.com/api/market/ticker');
+        const url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=thb&include_24hr_change=true";
+        const res = await fetch(url);
         const data = await res.json();
 
         const coins = {
-          BTC: data['BTC_THB'],
-          ETH: data['ETH_THB'],
-          USDT: data['USDT_THB']
+          BTC: data.bitcoin,
+          ETH: data.ethereum,
+          USDT: data.tether
         };
 
         for (const [key, val] of Object.entries(coins)) {
-          if (val) {
-            document.getElementById(key.toLowerCase() + '-price').textContent =
-              val.last.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
+          document.getElementById(key.toLowerCase() + '-price').textContent =
+            val.thb.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
 
-            const changeEl = document.getElementById(key.toLowerCase() + '-change');
-            changeEl.textContent = (val.percentChange >= 0 ? "+" : "") + val.percentChange.toFixed(2) + "%";
-            changeEl.className = "change " + (val.percentChange >= 0 ? "positive" : "negative");
-          }
+          const changeEl = document.getElementById(key.toLowerCase() + '-change');
+          const change = val.thb_24h_change ?? 0;
+          changeEl.textContent = (change >= 0 ? "+" : "") + change.toFixed(2) + "%";
+          changeEl.className = "change " + (change >= 0 ? "positive" : "negative");
         }
       } catch (e) {
-        console.error("Error fetching Bitkub prices:", e);
+        console.error("Error fetching prices:", e);
       }
     }
 
