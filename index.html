@@ -7,14 +7,142 @@
   <style>
     body {
       margin: 0;
-      background: #f5f5f5;
+      background: #0f0f0f;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
       min-height: 100vh;
+      color: #fff;
     }
 
     header {
-      background-color: #00b1
+      color: white;
+      font-size: 2.5em;
+      margin-top: 30px;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00b140;
+    }
+
+    .dashboard {
+      display: flex;
+      gap: 40px;
+      margin: 60px 20px 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background: #1c1c1c;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0,255,120,0.2);
+      padding: 30px;
+      width: 280px;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 40px rgba(0,255,120,0.4);
+    }
+
+    .logo {
+      height: 60px;
+      margin-bottom: 15px;
+    }
+
+    .coin-name {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #00b140;
+    }
+
+    .price {
+      font-size: 2em;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .change {
+      font-size: 1.2em;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    .positive {
+      color: #00e676;
+    }
+
+    .negative {
+      color: #ff5252;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 15px;
+      color: #888;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <header>Bitkub Real-Time Crypto Prices</header>
+  <div class="dashboard">
+    <div class="card">
+      <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=026" alt="BTC Logo" class="logo">
+      <div class="coin-name">Bitcoin (BTC)</div>
+      <div class="price" id="btc-price">Loading...</div>
+      <div class="change" id="btc-change">-</div>
+    </div>
+    <div class="card">
+      <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png?v=026" alt="ETH Logo" class="logo">
+      <div class="coin-name">Ethereum (ETH)</div>
+      <div class="price" id="eth-price">Loading...</div>
+      <div class="change" id="eth-change">-</div>
+    </div>
+    <div class="card">
+      <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=026" alt="USDT Logo" class="logo">
+      <div class="coin-name">Tether (USDT)</div>
+      <div class="price" id="usdt-price">Loading...</div>
+      <div class="change" id="usdt-change">-</div>
+    </div>
+  </div>
+
+  <footer>Powered by Bitkub API — Updates every 10 sec</footer>
+
+  <script>
+    async function updatePrices() {
+      try {
+        const res = await fetch('https://api.bitkub.com/api/market/ticker');
+        const data = await res.json();
+
+        const coins = {
+          BTC: data['BTC_THB'],
+          ETH: data['ETH_THB'],
+          USDT: data['USDT_THB']
+        };
+
+        for (const [key, val] of Object.entries(coins)) {
+          if (val) {
+            document.getElementById(key.toLowerCase() + '-price').textContent =
+              val.last.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
+
+            const changeEl = document.getElementById(key.toLowerCase() + '-change');
+            changeEl.textContent = (val.percentChange >= 0 ? "+" : "") + val.percentChange.toFixed(2) + "%";
+            changeEl.className = "change " + (val.percentChange >= 0 ? "positive" : "negative");
+          }
+        }
+      } catch (e) {
+        console.error("Error fetching Bitkub prices:", e);
+      }
+    }
+
+    updatePrices();
+    setInterval(updatePrices, 10000);
+  </script>
+</body>
+</html>
