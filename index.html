@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Real-Time Crypto Prices</title>
+  <title>Bitkub Real-Time Crypto Prices</title>
   <style>
     body {
       margin: 0;
@@ -95,10 +95,10 @@
   </style>
 </head>
 <body>
-  <!-- Bitkub Exchange Logo (make sure bitkub-logo.png is uploaded) -->
+  <!-- Bitkub Exchange Logo -->
   <img src="bitkub-logo.png" alt="Bitkub Exchange Logo" class="bitkub-logo">
 
-  <header>Bitkub Real-Time Crypto Prices</header>
+  <header>Real-Time Crypto Prices</header>
 
   <div class="dashboard">
     <div class="card">
@@ -114,58 +114,54 @@
       <div class="change" id="eth-change">-</div>
     </div>
     <div class="card">
-      <img src="https://assets.coingecko.com/coins/images/325/large/Tether-logo.png" alt="USDT Logo" class="logo">
-      <div class="coin-name">Tether (USDT)</div>
-      <div class="price" id="usdt-price">Loading...</div>
-      <div class="change" id="usdt-change">-</div>
+      <img src="zrc-logo.png" alt="ZRC Logo" class="logo">
+      <div class="coin-name">Zurrency (ZRC)</div>
+      <div class="price" id="zrc-price">Loading...</div>
+      <div class="change" id="zrc-change">-</div>
     </div>
   </div>
 
-  <footer>Updates every 10 sec</footer>
+  <footer>Cryptocurrency and digital tokens involve high risks; investors may lose all investment money and should study information carefully and make investments according to their own risk profile.
+    Powered by Bitkub API · Updates every 10 sec</footer>
 
   <script>
     async function updatePrices() {
       try {
-
-        // ดึงข้อมูล api ตามชื่อเหรียญ
         const symbols = {
           BTC: "btc_thb",
           ETH: "eth_thb",
-          USDT: "usdt_thb"
+          ZRC: "zrc_thb"
         };
+
         const responses = await Promise.all(
           Object.values(symbols).map(sym =>
             fetch(`https://api.bitkub.com/api/v3/market/ticker?sym=${sym}`)
           )
         );
+
         const results = await Promise.all(responses.map(res => res.json()));
 
-        
-        // แยกข้อมูลจาก api ตามเหรียญ
-        const coins = {
-          BTC:  null,
-          ETH:  null,
-          USDT: null
-        };
-        for (const [key0, val0] of Object.entries(results)) {
-          switch(val0[0]['symbol']){
+        const coins = { BTC: null, ETH: null, ZRC: null };
+
+        for (const val of results) {
+          const symbol = val[0]['symbol'];
+          switch (symbol) {
             case "BTC_THB":
-                coins['BTC'] = val0[0]
-                break;
+              coins.BTC = val[0];
+              break;
             case "ETH_THB":
-                coins['ETH'] = val0[0]
-                break;
-            case "USDT_THB":
-                coins['USDT'] = val0[0]
-                break;
+              coins.ETH = val[0];
+              break;
+            case "ZRC_THB":
+              coins.ZRC = val[0];
+              break;
           }
         }
 
-        // ลูปข้อมูล
         for (const [key, val] of Object.entries(coins)) {
-        const priceEl = document.getElementById(`${key.toLowerCase()}-price`);
-        const changeEl = document.getElementById(`${key.toLowerCase()}-change`);
-          if (priceEl && changeEl) {
+          const priceEl = document.getElementById(`${key.toLowerCase()}-price`);
+          const changeEl = document.getElementById(`${key.toLowerCase()}-change`);
+          if (priceEl && changeEl && val) {
             priceEl.textContent = new Intl.NumberFormat('th-TH', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
@@ -182,8 +178,6 @@
     }
 
     updatePrices();
-    // จะดึงข้อมูลทุกๆ 10วินาที
-    // 10 * 1000 = 10000
     setInterval(updatePrices, 10000);
   </script>
 </body>
