@@ -126,26 +126,53 @@
   <script>
     async function updatePrices() {
       try {
-        const url = "https://api.bitkub.com/api/market/ticker";
-        const res = await fetch(url);
-        const data = await res.json();
-    
-        const coins = {
-          BTC: data["THB_BTC"],
-          ETH: data["THB_ETH"],
-          USDT: data["THB_USDT"]
+
+        // ดึงข้อมูล api ตามชื่อเหรียญ
+        const symbols = {
+          BTC: "btc_thb",
+          ETH: "eth_thb",
+          USDT: "usdt_thb"
         };
-    
+        const responses = await Promise.all(
+          Object.values(symbols).map(sym =>
+            fetch(`https://api.bitkub.com/api/v3/market/ticker?sym=${sym}`)
+          )
+        );
+        const results = await Promise.all(responses.map(res => res.json()));
+
+        
+        // แยกข้อมูลจาก api ตามเหรียญ
+        const coins = {
+          BTC:  null,
+          ETH:  null,
+          USDT: null
+        };
+        for (const [key0, val0] of Object.entries(results)) {
+          switch(val0[0]['symbol']){
+            case "BTC_THB":
+                coins['BTC'] = val0[0]
+                break;
+            case "ETH_THB":
+                coins['ETH'] = val0[0]
+                break;
+            case "USDT_THB":
+                coins['USDT'] = val0[0]
+                break;
+          }
+        }
+
+        // ลูปข้อมูล
         for (const [key, val] of Object.entries(coins)) {
-          const priceEl = document.getElementById(`${key.toLowerCase()}-price`);
-          const changeEl = document.getElementById(`${key.toLowerCase()}-change`);
-    
+        const priceEl = document.getElementById(`${key.toLowerCase()}-price`);
+        const changeEl = document.getElementById(`${key.toLowerCase()}-change`);
           if (priceEl && changeEl) {
-            priceEl.textContent =
-              val.last.toLocaleString("en-US", { minimumFractionDigits: 2 }) + " ฿";
-    
-            const change = val.percentChange ?? 0;
-            changeEl.textContent = (change >= 0 ? "+" : "") + change.toFixed(2) + "%";
+            priceEl.textContent = new Intl.NumberFormat('th-TH', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(val.last) + ' ฿';
+
+            const change = val.percent_change ?? 0;
+            changeEl.textContent = (change >= 0 ? "+" : "") + change + "%";
             changeEl.className = "change " + (change >= 0 ? "positive" : "negative");
           }
         }
@@ -155,6 +182,8 @@
     }
 
     updatePrices();
+    // จะดึงข้อมูลทุกๆ 10วินาที
+    // 10 * 1000 = 10000
     setInterval(updatePrices, 10000);
   </script>
 </body>
