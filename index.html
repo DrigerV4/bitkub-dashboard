@@ -126,24 +126,28 @@
   <script>
     async function updatePrices() {
       try {
-        const url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=thb&include_24hr_change=true";
+        const url = "https://api.bitkub.com/api/market/ticker";
         const res = await fetch(url);
         const data = await res.json();
-
+    
         const coins = {
-          BTC: data.bitcoin,
-          ETH: data.ethereum,
-          USDT: data.tether
+          BTC: data["THB_BTC"],
+          ETH: data["THB_ETH"],
+          USDT: data["THB_USDT"]
         };
-
+    
         for (const [key, val] of Object.entries(coins)) {
-          document.getElementById(key.toLowerCase() + '-price').textContent =
-            val.thb.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
-
-          const changeEl = document.getElementById(key.toLowerCase() + '-change');
-          const change = val.thb_24h_change ?? 0;
-          changeEl.textContent = (change >= 0 ? "+" : "") + change.toFixed(2) + "%";
-          changeEl.className = "change " + (change >= 0 ? "positive" : "negative");
+          const priceEl = document.getElementById(`${key.toLowerCase()}-price`);
+          const changeEl = document.getElementById(`${key.toLowerCase()}-change`);
+    
+          if (priceEl && changeEl) {
+            priceEl.textContent =
+              val.last.toLocaleString("en-US", { minimumFractionDigits: 2 }) + " ฿";
+    
+            const change = val.percentChange ?? 0;
+            changeEl.textContent = (change >= 0 ? "+" : "") + change.toFixed(2) + "%";
+            changeEl.className = "change " + (change >= 0 ? "positive" : "negative");
+          }
         }
       } catch (e) {
         console.error("Error fetching prices:", e);
