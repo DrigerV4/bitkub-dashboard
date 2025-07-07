@@ -118,10 +118,10 @@
       <div class="change" id="eth-change">-</div>
     </div>
     <div class="card">
-      <img src="zrc-logo.png" alt="ZRC Logo (Zircuit)" class="logo">
-      <div class="coin-name">Zircuit (ZRC)</div>
-      <div class="price" id="zrc-price">Loading...</div>
-      <div class="change" id="zrc-change">-</div>
+      <img src="https://cryptologos.cc/logos/worldcoin-org-wld-logo.png?v=040" alt="WLD Logo" class="logo">
+      <div class="coin-name">Worldcoin (WLD)</div>
+      <div class="price" id="wld-price">Loading...</div>
+      <div class="change" id="wld-change">-</div>
     </div>
   </div>
 
@@ -138,7 +138,7 @@
         const symbols = {
           BTC: "btc_thb",
           ETH: "eth_thb",
-          ZRC: "zrc_thb"
+          ZRC: "wld_thb"
         };
 
         const responses = await Promise.all(
@@ -160,8 +160,8 @@
             case "ETH_THB":
               coins.ETH = val[0];
               break;
-            case "ZRC_THB":
-              coins.ZRC = val[0];
+            case "WLD_THB":
+              coins.WLD = val[0];
               break;
           }
         }
